@@ -8,12 +8,19 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
+ * User Entity
+ *
+ * Represents a user account in the booking system.
+ * Users can be either clients or business owners (admin).
+ *
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
  */
 class User 
 {
     /**
+     * Unique identifier for the user
+     *
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
@@ -21,18 +28,25 @@ class User
     private $id;
 
     /**
+     * User's last name (nom)
+     *
      * @Assert\NotBlank(message="le Champ nom est obligatoire")
      * @ORM\Column(type="string", length=20)
      */
     private $nom;
 
     /**
+     * User's first name (prenom)
+     *
      * @Assert\NotBlank(message="le Champ prenom est obligatoire")
      * @ORM\Column(type="string", length=20)
      */
     private $prenom;
 
     /**
+     * User's email address
+     * Used for authentication and communication
+     *
      * @Assert\NotBlank(message="le Champ mail est obligatoire")
      * @Assert\Email(message="mail non valid")
      * @ORM\Column(type="string", length=50)
@@ -40,6 +54,8 @@ class User
     private $mail;
 
     /**
+     * User's hashed password
+     * Must be between 4-8 characters before hashing
      *
      * @Assert\NotBlank(message="le Champ prenom est obligatoire")
      * @Assert\Length(
@@ -53,26 +69,41 @@ class User
     private $password;
 
     /**
+     * Associated business owner account (if user is a business owner)
+     * One-to-one relationship with Businessowner entity
+     *
      * @ORM\OneToOne(targetEntity=Businessowner::class, mappedBy="Useraccount", cascade={"persist", "remove"})
      */
     private $Businessowner;
 
     /**
+     * User account type
+     * Possible values: "client", "admin" (business owner)
+     *
      * @ORM\Column(type="string", length=20)
      */
     private $type;
 
     /**
+     * Ban status
+     * True if user is banned from the system
+     *
      * @ORM\Column(type="boolean")
      */
     private $ban;
 
     /**
+     * Account activation status
+     * True if user account is active and verified
+     *
      * @ORM\Column(type="boolean")
      */
     private $active;
 
     /**
+     * User profile image filename
+     * Optional field, can be null
+     *
      * @ORM\Column(type="string", length=50, nullable=true)
      */
     private $image;
