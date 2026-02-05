@@ -23,6 +23,11 @@ class BookingController extends AbstractController
         $this->session = $session;
     }
 
+    /**
+     * Check if user is authenticated and not banned
+     *
+     * @return bool True if user is authenticated and not banned, false otherwise
+     */
     private function isAuth() {
         if(is_null($this->session->get('user'))){
             return false;
@@ -35,6 +40,11 @@ class BookingController extends AbstractController
         return true;
     }
 
+    /**
+     * Check if user is authenticated, has admin role and is not banned
+     *
+     * @return bool True if user is admin and not banned, false otherwise
+     */
     private function isAdmin() {
         if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
             return false;
@@ -48,7 +58,11 @@ class BookingController extends AbstractController
     }
 
     /**
+     * Display all bookings for the authenticated business owner
+     * Shows bookings grouped by listings owned by the current user
+     *
      * @Route("/booking", name="booking")
+     * @return Response Rendered booking list page
      */
     public function index(): Response
     {
@@ -88,7 +102,13 @@ class BookingController extends AbstractController
     }
 
     /**
+     * Process and store a new booking request
+     * Validates booking data, checks for date blocks, and sends SMS notification via Twilio
+     *
      * @Route("/booking/store", name="booking_store")
+     * @param Request $request The HTTP request containing booking data
+     * @param ValidatorInterface $validator Symfony validator service
+     * @return Response Thank you page or form with validation errors
      */
     public function store(Request $request, ValidatorInterface $validator): Response
     {
@@ -438,6 +458,12 @@ class BookingController extends AbstractController
         ]);
     }
 
+    /**
+     * Generate a random alphanumeric string
+     *
+     * @param int $length Length of the random string to generate (default: 10)
+     * @return string Random alphanumeric string
+     */
     private function generateRandomString($length = 10) {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
@@ -448,6 +474,11 @@ class BookingController extends AbstractController
         return $randomString;
     }
 
+    /**
+     * Get list of available booking statuses
+     *
+     * @return array Array of booking status strings
+     */
     private function getStatusList() {
         $res = [
             "approved",
@@ -457,6 +488,12 @@ class BookingController extends AbstractController
         return $res;
     }
 
+    /**
+     * Get list of available booking time slots
+     * Returns time slots in 30-minute intervals from 12:00 AM to 11:30 PM
+     *
+     * @return array Array of time slot strings in 12-hour format
+     */
     private function getTimeList() {
         $res = [
             "12:00 AM",
