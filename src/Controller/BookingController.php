@@ -15,6 +15,10 @@ use App\Entity\Listing;
 use App\Entity\User;
 use Twilio\Rest\Client;
 
+/**
+ * Booking Controller
+ * Handles all booking-related operations including creation, updates, and status management
+ */
 class BookingController extends AbstractController
 {
     protected $session;
@@ -23,6 +27,9 @@ class BookingController extends AbstractController
         $this->session = $session;
     }
 
+    /**
+     * Check if user is authenticated and not banned
+     */
     private function isAuth() {
         if(is_null($this->session->get('user'))){
             return false;
@@ -35,6 +42,9 @@ class BookingController extends AbstractController
         return true;
     }
 
+    /**
+     * Check if user has admin privileges and is not banned
+     */
     private function isAdmin() {
         if(is_null($this->session->get('user'))||$this->session->get('user')->getType()!="admin"){
             return false;
